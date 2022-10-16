@@ -1,0 +1,30 @@
+﻿@page "/"
+
+@using EntitySystem.Client.Services
+@using EntitySystem.Client.Domain.Data.Source
+@using EntitySystem.Client.Files.Domain.Data.Property.Extensions
+@using Example.FileManager.Client.Services
+@using Example.FileManager.Shared
+@using EntitySystem.Client.Domain.Data.Property.Extensions
+@using EntitySystem.Client.Domain.Data.Property.Extensions.Settings
+@implements EntitySystem.Client.Domain.Data.Options.IDataOptions
+
+@inject IDataService DataService
+
+@_dataSource?.Render(this)
+
+@code {
+    private IDataSource _dataSource;
+
+    [Parameter]
+    public long Id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _dataSource = DataService.Get<FileReference, FileReferenceService>("File")
+            .LinkDownload()
+            .Upload("Upload", o => o.HideInEditDialog())
+            .Property("Name", f => f.Name, o => o.HideInEntityDialog())
+            .Property("Size", p => p.Size, o => o.HideInEntityDialog());
+    }
+}

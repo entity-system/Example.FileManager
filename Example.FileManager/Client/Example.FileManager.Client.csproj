@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntitySystem.Client.Files" Version="0.1.1" />
+    <PackageReference Include="EntitySystem.Client.Fluent" Version="0.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.6" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Example.FileManager.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

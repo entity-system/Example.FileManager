@@ -1,0 +1,44 @@
+﻿@page "/storage"
+@page "/storage/{id:long}"
+
+@using EntitySystem.Client.Services
+@using EntitySystem.Client.Domain.Data.Source
+@using Example.FileManager.Client.Services
+@using Example.FileManager.Shared
+@using EntitySystem.Client.Domain.Data.Property.Extensions
+@using EntitySystem.Client.Domain.Data.Property.Extensions.Settings
+@using EntitySystem.Client.Domain.Data.Source.Extensions.Link
+@using EntitySystem.Client.Domain.Data.Source.Extensions.Settings
+@using EntitySystem.Client.Files.Domain.Data.Property.Extensions
+@implements EntitySystem.Client.Domain.Data.Options.IDataOptions
+
+@inject IDataService DataService
+
+@_dataSource?.Render(this)
+
+@code {
+    private IDataSource _dataSource;
+
+    [Parameter]
+    public long Id { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        _dataSource = DataService.Get<PersistentFile, PersistentFileService>("Persistent")
+            .LinkForward()
+            .LinkBack()
+            .Property("Name", p => p.Name)
+            .Property("Path", p => p.Storage)
+            .Property("Size", p => p.Size)
+            .Property("Hash", p => p.Hash)
+            .Join<PersistentInfo, PersistentInfoService, PersistentFile>("Reference", p => p, i => i.File, dpi => dpi
+                .Target<FileReference, FileReferenceService>("Reference", i => i.Reference, r => r.Name, df => df
+                    .Property("Reference name", r => r.Name))
+                .DisableAdd()
+                .DisableEdit()
+                .DisableDelete())
+            .DisableAdd()
+            .DisableEdit()
+            .DisableDelete();
+    }
+}
